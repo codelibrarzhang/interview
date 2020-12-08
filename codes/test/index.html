@@ -77,7 +77,7 @@
 		var scrollHeight = $('.scroll_box')[0].scrollHeight,
 		    docHeight = window.screen.availHeight,
 		    scrollTop = $('.scroll_box')[0].scrollTop
-		if (scrollHeight > scrollHeight + scrollTop) {
+		if (scrollHeight > docHeight + scrollTop) {
 			var T = window.requestAnimationFrame(srcollEnd)
 			$('.scroll_box')[0].scrollTo(0, scrollTop + (scrollHeight - docHeight) / 8)
 	    	} else {
