@@ -79,8 +79,10 @@
 		    scrollTop = $('.scroll_box')[0].scrollTop
 		if (scrollHeight > scrollHeight + scrollTop) {
 			window.requestAnimationFrame(srcollEnd)
-			window.scrollTop(0, (scrollHeight - docHeight) / 8)
-	    	}
+			$('.scroll_box')[0].scrollTo(0, scrollTop + (scrollHeight - docHeight) / 8)
+	    	} else {
+			window.cancelAnimationFrame()
+		}
 	}	
 	</script>
 	</body>
