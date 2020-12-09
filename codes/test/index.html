@@ -75,7 +75,7 @@
         );
 	function srcollEnd() {
 		var scrollHeight = $('.scroll_box')[0].scrollHeight,
-		    docHeight = window.screen.availHeight,
+		    docHeight = document.body.scrollHeight,
 		    scrollTop = $('.scroll_box')[0].scrollTop
 		if (scrollHeight > docHeight + scrollTop) {
 			var T = window.requestAnimationFrame(srcollEnd)
