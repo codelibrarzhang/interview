@@ -41,7 +41,7 @@
         
 	</head>
 	<body>
-		<div class="scroll_box">
+		<div class="scroll_box" id="scroll_box">
             <div class="main">
                 <div class="red"></div>
                 <div class="green"></div>
@@ -74,13 +74,14 @@
             }
         );
 	function srcollEnd() {
-		var scrollHeight = $('.scroll_box')[0].scrollHeight,
+        var scrollBox = document.getELementById('scroll_box'),
+		    scrollHeight = scrollBox.scrollHeight,
 		    docHeight = document.body.scrollHeight,
-		    scrollTop = $('.scroll_box')[0].scrollTop
+		    scrollTop = scrollBox.scrollTop
 		if (scrollHeight > docHeight + scrollTop) {
 			var T = window.requestAnimationFrame(srcollEnd)
-			$('.scroll_box')[0].scrollTo(0, scrollTop + (scrollHeight - docHeight) / 8)
-	    	} else {
+			scrollBox.scrollTo(0, scrollTop + (scrollHeight - docHeight) / 8)
+        } else {
 			window.cancelAnimationFrame(T)
 		}
 	}
