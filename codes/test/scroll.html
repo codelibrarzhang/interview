@@ -10,6 +10,14 @@
                 padding: 0;
                 margin: 0;
             }
+            .hidden {
+                overflow: hidden;
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+            }
             .container {
                 height: 100vh;
                 overflow: hidden;
@@ -26,10 +34,12 @@
                 color: #fff;
             }
             .click_btn {
-                position: absolute;
+                position: fixed;
                 top: 20%;
                 left: 0;
                 background-color: coral;
+                padding: 10px;
+                z-index: 6;
             }
             .tap_pack {
                 position: fixed;
@@ -86,7 +96,8 @@
     var vm = new Vue({
         el: '#container',
         data: {
-            packShow: false
+            packShow: false,
+            scrollTop: 0,
         },
         mounted: function () {
             console.log('禁止滑动')
