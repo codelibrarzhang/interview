@@ -10,14 +10,6 @@
                 padding: 0;
                 margin: 0;
             }
-            .hidden {
-                overflow: hidden;
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-            }
             .container {
                 height: 100vh;
                 overflow: hidden;
@@ -27,6 +19,9 @@
                 height: 100vh;
                 overflow-y: auto;
                 -webkit-overflow-scrolling: touch;
+            }
+            .hidden {
+                overflow-y: hidden;
             }
             .block_color {
                 height: 2000px;
@@ -74,14 +69,14 @@
 	</head>
 	<body>
         <div class="container" id="container">
-            <div class="click_btn" @click="packShow = true"> 点几下</div>
-            <div class="timers">
+            <div class="click_btn" @click="showPage"> 点几下</div>
+            <div class="timers" :class="{hidden: hidden}">
                 <div class="block_color">
                     今天需要一段占位符，先写个几个，其它复制吧今天需要一段占位符，先写个几个，其它复制吧今天需要一段占位符，先写个几个，其它复制吧今天需要一段占位符，先写个几个，其它复制吧今天需要一段占位符，先写个几个，其它复制吧今天需要一段占位符，先写个几个，其它复制吧今天需要一段占位符，先写个几个，其它复制吧今天需要一段占位符，先写个几个，其它复制吧今天需要一段占位符，先写个几个，其它复制吧今天需要一段占位符，先写个几个，其它复制吧今天需要一段占位符，先写个几个，其它复制吧今天需要一段占位符，先写个几个，其它复制吧今天需要一段占位符，先写个几个，其它复制吧今天需要一段占位符，先写个几个，其它复制吧今天需要一段占位符，先写个几个，其它复制吧今天需要一段占位符，先写个几个，其它复制吧今天需要一段占位符，先写个几个，其它复制吧今天需要一段占位符，先写个几个，其它复制吧今天需要一段占位符，先写个几个，其它复制吧今天需要一段占位符，先写个几个，其它复制吧今天需要一段占位符，先写个几个，其它复制吧今天需要一段占位符，先写个几个，其它复制吧今天需要一段占位符，先写个几个，其它复制吧今天需要一段占位符，先写个几个，其它复制吧今天需要一段占位符，先写个几个，其它复制吧今天需要一段占位符，先写个几个，其它复制吧今天需要一段占位符，先写个几个，其它复制吧
                 </div>
             </div>
             <article class="tap_pack" v-show="packShow">
-                <div class="mask" @click="packShow = false" @touchmove.prevent.self="add"></div>
+                <div class="mask" @click="close" @touchmove.prevent.self="add"></div>
                 <div class="content">
                     <div class="pack_content" @touchmove.stop>
                         今天需要一段占位符，先写个几个，其它复制吧今天需要一段占位符，先写个几个，其它复制吧今天需要一段占位符，先写个几个，其它复制吧今天需要一段占位符，先写个几个，其它复制吧今天需要一段占位符，先写个几个，其它复制吧今天需要一段占位符，先写个几个，其它复制吧今天需要一段占位符，先写个几个，其它复制吧今天需要一段占位符，先写个几个，其它复制吧今天需要一段占位符，先写个几个，其它复制吧今天需要一段占位符，先写个几个，其它复制吧今天需要一段占位符，先写个几个，其它复制吧今天需要一段占位符，先写个几个，其它复制吧今天需要一段占位符，先写个几个，其它复制吧今天需要一段占位符，先写个几个，其它复制吧今天需要一段占位符，先写个几个，其它复制吧今天需要一段占位符，先写个几个，其它复制吧今天需要一段占位符，先写个几个，其它复制吧今天需要一段占位符，先写个几个，其它复制吧今天需要一段占位符，先写个几个，其它复制吧今天需要一段占位符，先写个几个，其它复制吧今天需要一段占位符，先写个几个，其它复制吧今天需要一段占位符，先写个几个，其它复制吧今天需要一段占位符，先写个几个，其它复制吧今天需要一段占位符，先写个几个，其它复制吧今天需要一段占位符，先写个几个，其它复制吧今天需要一段占位符，先写个几个，其它复制吧今天需要一段占位符，先写个几个，其它复制吧
@@ -98,6 +93,7 @@
         data: {
             packShow: false,
             scrollTop: 0,
+            hidden: false
         },
         mounted: function () {
             console.log('禁止滑动')
@@ -105,6 +101,19 @@
         methods: {
             add: function () {
                 console.log(1)
+            },
+            showPage: function () {
+                this.packShow = true
+                this.recordLocation()
+            },
+            recordLocation: function () {
+                this.scrollTop = document.getElementsByClassName('timers')[0].scrollTop
+                // document.getElementsByClassName('block_color')[0].style.transform = 'translateY(' + this.scrollTop + 'px)'
+                console.log(this.scrollTop)
+                this.hidden = true
+            },
+            close: function () {
+                this.hidden = false
             }
         }
     })
