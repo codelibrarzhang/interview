@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-        <title>延时加载测试</title>
+        <title>时间戳</title>
         <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
         <style>
             * {
@@ -15,42 +15,59 @@
         
 	</head>
 	<body>
-		<div class="timers" id="timers">
-            <div class="timer1">{{dataStr}}</div>
+		<div id="count">
+            <div class="timer1"></div>
+            <div class="timer2"></div>
         </div>
     <script type="text/javascript">
     var vm = new Vue({
-        el: '#timers',
+        el: '#count',
         data: {
             timerObj: {},
-            dataStr: ''
+            dataStr: '',
+            now: new Date().getTime(),
+            closeTime: 0
         },
         mounted: function () {
-            this.setTime('2021-02-19 18:31', 1)
+            this.countTime('2021-03-04 21:58', 1)
+            this.countTime('2021-03-04 22:10', 2)
+            this.closeTime = new Date().getTime()
         },
         methods: {
-            setTime: function(timestr, index){
+            countTime: function (timestr, index) {
                 var self = this
-                var leftTime = new Date(timestr.replace(/\-/g, '/')).getTime() - new Date().getTime();
-                this.timerObj[index] = setInterval(function () {
-                    if (leftTime >= 0) {
-                        var d = self.formatNumber(Math.floor(leftTime / 1000 / 60 / 60 / 24));
-                        var h = self.formatNumber(Math.floor(leftTime / 1000 / 60 / 60 % 24));
-                        var m = self.formatNumber(Math.floor(leftTime / 1000 / 60 % 60));
-                        var s = self.formatNumber(Math.floor(leftTime / 1000 % 60));
+                var leftTime = (new Date(timestr).getTime() - this.now) / 1000;
+                var recoed1 = new Date().getTime()
+                var timerInter = setInterval(function () {
+                    var recoed2 = new Date().getTime()
+                    recoed1 = recoed2
+                    if (recoed2 - recoed1 > 2000) {
+                        leftTime -= Math.floor(recoed2 - recoed1 - 1000) / 1000
+                        console.log(recoed2 - recoed1)
+                    }
+                    if (leftTime > 0) {
+                        self.showTime(leftTime, index)
                         leftTime--
-                        console.log(leftTime,d,h,m,s)
-                        self.dataStr = d + '天' + h + ':' + m + ':' + s
                     } else {
-                        clearInterval(self.timerObj[index]);
+                        timerInter && clearInterval(timerInter)
                         self.dataStr = '拼团已结束';
+                        document.getElementsByClassName('timer'+index)[0].innerHTML = self.dataStr
                     }
                 }, 1000)
             },
+            showTime: function (time, index) {
+                var leftTime = time
+                var d = this.formatNumber(Math.floor(leftTime/60/60/24));
+                var h = this.formatNumber(Math.floor(leftTime/60/60%24));
+                var m = this.formatNumber(Math.floor(leftTime/60%60));
+                var s = this.formatNumber(Math.floor(leftTime%60)); 
+                this.dataStr = d + '天' + h + ':' + m + ':' + s
+                document.getElementsByClassName('timer'+index)[0].innerHTML = this.dataStr
+            },
             formatNumber: function (n) {
-                n = n.toString();
-                return n[1] ? n : '0' + n;
-            }
+                return n >= 10 ? n : '0' + n;
+            },
+
         }
     })
 	</script>

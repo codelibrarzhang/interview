@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+        <title>滚动到底部</title>
+        <script src="https://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+        <style>
+            * {
+                padding: 0;
+                margin: 0;
+            }
+            .scroll_box {
+                height: 100vh;
+                overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+            .red {
+                background-color: red;
+                height: 600px;
+            }
+            .green {
+                background-color: green;
+                height: 600px;
+            }
+            .blue {
+                background-color: blue;
+                height: 600px;
+            }
+            .fixed {
+                padding: 10px;
+                background-color: grey;
+                position: fixed;
+                top: 50%;
+                right: 0;
+            }
+            .scroll {
+                scroll-behavior: smooth;
+            }
+        </style>
+        
+	</head>
+	<body>
+		<div class="scroll_box" id="scroll_box">
+            <div class="main">
+                <div class="red"></div>
+                <div class="green"></div>
+                <div class="blue"></div>
+            </div>
+            <div class="fixed">
+                <div class="btn1">去底部scroll</div>
+                <br>
+                <div class="btn2">去底部css</div>
+            </div>
+            
+        </div>
+	<script type="text/javascript">
+		$('.fixed .btn1').on(
+            'click',
+            function () {
+                var h = document.getElementsByClassName('main')[0].offsetHeight
+                console.log(h)
+                $('.scroll_box').removeClass('scroll')
+                $('.scroll_box')[0].scrollTo({'behavior': 'smooth', 'top': h})
+            }
+        );
+        $('.fixed .btn2').on(
+            'click',
+            function () {
+                var h = document.getElementsByClassName('main')[0].offsetHeight
+                console.log(h)
+                $('.scroll_box').addClass('scroll')
+                $('.scroll_box')[0].scrollTo({'behavior': 'smooth', 'top': h})
+            }
+        );
+	function srcollEnd() {
+        var scrollBox = document.getElementById('scroll_box'),
+		    scrollHeight = scrollBox.scrollHeight,
+		    docHeight = document.body.scrollHeight,
+		    scrollTop = scrollBox.scrollTop
+		if (scrollHeight > docHeight + scrollTop) {
+			var T = window.requestAnimationFrame(srcollEnd)
+			scrollBox.scrollTo(0, scrollTop + (scrollHeight - docHeight) / 8)
+        } else {
+			window.cancelAnimationFrame(T)
+		}
+	}
+		srcollEnd()
+	</script>
+	</body>
+</html>
