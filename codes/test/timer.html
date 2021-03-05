@@ -42,11 +42,11 @@
                 var recoed1 = new Date().getTime()
                 var timerInter = setInterval(function () {
                     var recoed2 = new Date().getTime()
-                    recoed1 = recoed2
                     if (recoed2 - recoed1 > 2000) {
                         leftTime -= Math.floor(recoed2 - recoed1 - 1000) / 1000
                         console.log(recoed2 - recoed1)
                     }
+                    recoed1 = recoed2
                     if (leftTime > 0) {
                         self.showTime(leftTime, index)
                         leftTime--
