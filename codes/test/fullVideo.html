@@ -1,81 +1,216 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="UTF-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-        <title>视频全屏</title>
-        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-        <style>
-            * {
-                padding: 0;
-                margin: 0;
-            }
-            
-        </style>
-        
-	</head>
-	<body>
-		<div id="count">
-            <div class="video">
-                <video id="video" controls="controls" preload="auto" poster="http://download.dcloud.net.cn/FastAndroid-mini.jpg" width="100%" height="auto" src="../video/movie.mp4"></video>
-            </div>
-        </div>
-    <script src="../js/vconsole.min.js"></script>
-    <script type="text/javascript">
-    var vConsole = new VConsole();
-    var fullScreenOfAndroid = function() {
-    if(true) {
-    // 最新5+API的支持
-    var self = plus.webview.currentWebview();
-        self.setStyle({
-                videoFullscreen: 'landscape'
-            });
-        } else {
-            // 如果暂未更新sdk，可以先使用差量升级等方式，做出兼容处理；
-            // 旧版本下的兼容处理
-            document.addEventListener('webkitfullscreenchange', function() {
-                var el = document.webkitFullscreenElement; //获取全屏元素
-                if(el) {
-                    plus.screen.lockOrientation('landscape'); //锁死屏幕方向为横屏
-                } else {
-                    plus.screen.unlockOrientation(); //解除屏幕方向的锁定
-                }
-            });
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>视频全屏</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="../js/jquery-2.1.1.min.js"></script>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+
+        /*页面全屏*/
+        .page {
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            width: 100%;
+            height: 100%;
+            /*background-size: 100% 100%;*/
+        }
+
+        /*垂直居中*/
+        .vertical_middle {
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        /* 视频 */
+        .page_video {
+            width: 100%;
+            background: #000000;
+            position: absolute;
+            left: 0;
+            top: 0;
+            text-align: center;
+        }
+
+        /*视频是以（0，0）为中心旋转的90度，所以left为100%*/
+        #video {
+            position: absolute;
+            /* margin-left: 4px; */
+            left: 100%;
+            z-index: 1;
+        }
+
+        .btn_video {
+            width: 10%;
+            position: absolute;
+            left: 5%;
+            z-index: 10;
+            /*display:none;*/
+        }
+
+        /*视频播放按钮*/
+        .start_video {
+            width: 100px;
+            height: 100px;
+            position: absolute;
+            left: 10%;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            margin: auto;
+            z-index: 100;
 
         }
-    };
-    // iOS平台的视频全屏旋转
-    var fullScreenOfIos = function(videoElem) {
-        // 监听的事件与Android平台有很大区别
-        videoElem.addEventListener('webkitbeginfullscreen', function() {
-            plus.screen.lockOrientation('landscape'); //锁死屏幕方向为横屏
-        });
-        videoElem.addEventListener('webkitendfullscreen', function() {
-            plus.screen.unlockOrientation(); //解除屏幕方向的锁定
-        });
-    };
-    // 涉及到5+API的内容，均在plusready事件后调用；
-    document.addEventListener('plusready', function() {
-        var osName = plus.os.name;
-        if(osName === 'Android') {
-            fullScreenOfAndroid();
-        } else if(osName === 'iOS') {
-            var videoElem = document.getElementById('video');
-            fullScreenOfIos(videoElem);
+
+        /*横屏观看更佳的提示文字*/
+        .video_info {
+            height: 30px;
+            font-size: 30px;
+            position: absolute;
+            top: 0%;
+            bottom: 0;
+            margin: auto;
+            left: 30%;
+            z-index: 100;
+            color: #fff;
+            transform: rotate(90deg);
+            -ms-transform: rotate(90deg);
+            /* Internet Explorer */
+            -moz-transform: rotate(90deg);
+            /* Firefox */
+            -webkit-transform: rotate(90deg);
+            /* Safari 和 Chrome */
+            -o-transform: rotate(90deg);
+            /* Opera */
         }
-    });
-    var vm = new Vue({
-        el: '#count',
-        data: {
-            
-        },
-        mounted: function () {
-            
-        },
-        methods: {
-            
-        }
-    })
-	</script>
-	</body>
+    </style>
+
+</head>
+
+<body>
+    <div id="count">
+        <!-- <div class="video">
+                <video id="video" controls="controls" preload="auto" poster="http://download.dcloud.net.cn/FastAndroid-mini.jpg" width="100%" height="auto" src="../video/movie.mp4"></video>
+                
+            </div> -->
+        <!-- 跳过视频按钮 -->
+        <img src="next.png" alt="" class="btn_video vertical_middle">
+        <!-- 视频页 -->
+        <div class="page page_video">
+            <!-- 视频开始按钮 -->
+            <img src="start_video.png" alt="" class="start_video">
+            <div class="video_info">横屏观看效果更佳</div>
+            <!-- 视频 -->
+            <video id="video" style="object-fit:fill;" playsinline="true" webkit-playsinline="true"
+                x-webkit-airplay="allow" airplay="allow" x5-video-player-type="h5" x5-video-player-fullscreen="true"
+                x5-video-orientation="portrait" poster="./images/video1.png" src="../video/movie.mp4">
+            </video>
+        </div>
+        <script src="../js/vconsole.min.js"></script>
+        
+        <script>
+            var vConsole = new VConsole();
+            /* 获取屏幕高度 */
+            var phone_height = document.documentElement.clientHeight;
+            if (phone_height < 1496) {
+                // console.log('屏幕高度<1496');
+                var back_up = (1496 - phone_height) / 2;
+                $(".page_video").css("backgroundPosition", "0 -" + back_up + "px");
+                if (phone_height >= 1360) {
+                    //华为手机&&苹果x
+                }
+            } else {
+                // console.log('屏幕高度>1496');
+                $(".page_video").css("backgroundSize", "100% 100%");
+            }
+
+            //视频横屏
+            var width = document.documentElement.clientWidth;
+            var height = document.documentElement.clientHeight;
+            $(".page_video").height(height + "px");
+
+            var video_width;
+            var video_height;
+            var video_top = 0;
+            var video_left = 0;
+            // 设置视频倒过来
+            if (width < height) {
+                //一个1920*1080的视频，到手机上高750时，宽度是1333.333
+                if (height < 1334) {
+                    console.log("手机分辨率高度 < 1333.33，视频横过来后宽度铺满，高度自适应后铺不满屏幕，所以向左平移一些居中");
+                    $("#video").width(height);
+                    video_width = $("#video").width();
+
+                    // 等比例自适应数值不是正好的，那就手动定高度
+                    video_height = video_width / 1920 * 1080;
+                    $("#video").height(video_height);
+
+                    //设置视频水平居中
+                    video_left = -(width - video_height) / 2;
+                } else {
+                    console.log("手机分辨率高度 > 1333.33，视频横过来后高度铺满，宽度自适应后铺不满屏幕，所以向下平移一些居中");
+                    $("#video").height(width);
+                    video_height = $("#video").height();
+
+                    // 等比例自适应数值不是正好的，那就手动定宽度
+                    video_width = (1920 / 1080) * $("#video").height();
+                    $("#video").width(video_width);
+
+                    //设置视频垂直居中
+                    video_top = (height - video_width) / 2;
+                }
+
+                //把调整好的数值赋给视频
+                $("#video").css({ 'left': "100%", "top": video_top + "px", "marginLeft": video_left + "px", 'transform': 'rotate(90deg)', 'transformOrigin': '0 0' });
+            }
+            //视频页
+            var myVideo = document.getElementById('video');
+            //点击播放按钮
+            $(".start_video").click(function () {
+                $(".start_video").hide();
+                $(".video_info").hide();
+                myVideo.play();
+            })
+            //监听视频被点击
+            myVideo.addEventListener('touchstart', function () {
+                $(".start_video").hide();
+                $(".video_info").hide();
+                myVideo.play();
+            });
+            //点击跳过按钮
+            $(".btn_video").click(function () {
+                video_end();
+            })
+            //视频播放结束
+            myVideo.addEventListener('ended', function () {
+                video_end();
+            }, false);
+            //视频播放结束的函数
+            function video_end() {
+                myVideo.pause();
+                console.log("视频播放结束");
+            }
+            // var vm = new Vue({
+            //     el: '#count',
+            //     data: {
+
+            //     },
+            //     mounted: function () {
+
+            //     },
+            //     methods: {
+
+            //     }
+            // })
+        </script>
+</body>
+
 </html>
