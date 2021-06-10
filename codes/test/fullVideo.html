@@ -38,6 +38,7 @@
             left: 0;
             top: 0;
             text-align: center;
+            display: none;
         }
 
         /*视频是以（0，0）为中心旋转的90度，所以left为100%*/
@@ -91,6 +92,17 @@
             -o-transform: rotate(90deg);
             /* Opera */
         }
+        .video_box {
+            position: relative;
+        }
+        .video_mack {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 5;
+        }
     </style>
 
 </head>
@@ -101,6 +113,10 @@
                 <video id="video" controls="controls" preload="auto" poster="http://download.dcloud.net.cn/FastAndroid-mini.jpg" width="100%" height="auto" src="../video/movie.mp4"></video>
                 
             </div> -->
+        <div class="video_box">
+            <div class="video_mack"></div>
+            <video class="video_v" src="../video/movie.mp4"></video>
+        </div>
         <!-- 跳过视频按钮 -->
         <img src="next.png" alt="" class="btn_video vertical_middle">
         <!-- 视频页 -->
@@ -109,7 +125,7 @@
             <img src="start_video.png" alt="" class="start_video">
             <div class="video_info">横屏观看效果更佳</div>
             <!-- 视频 -->
-            <video id="video" style="object-fit:fill;" playsinline="true" webkit-playsinline="true"
+            <video id="video" style="object-fit:fill;" controls playsinline="true" webkit-playsinline="true"
                 x-webkit-airplay="allow" airplay="allow" x5-video-player-type="h5" x5-video-player-fullscreen="true"
                 x5-video-orientation="portrait" poster="./images/video1.png" src="../video/movie.mp4">
             </video>
@@ -117,6 +133,12 @@
         <script src="../js/vconsole.min.js"></script>
         
         <script>
+            $('.video_mack').click(function () {
+                $('.page_video').show();
+                $(".start_video").hide();
+                $(".video_info").hide();
+                myVideo.play();
+            })
             var vConsole = new VConsole();
             /* 获取屏幕高度 */
             var phone_height = document.documentElement.clientHeight;
