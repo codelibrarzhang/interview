@@ -234,11 +234,10 @@
                     viewVideo: function () {
                         var self = this
                         this.videoPackShow = true
-                        console.log(this.$refs['video'])
-                        this.$nextTick(function() {
-                            self.$refs['video'].play()
+                        this.$nextTick(function () {
+                            var myVideo = document.getElementById('video');
+                            myVideo.play();
                         })
-                        
                     },
                     quitFull: function () {
                         this.videoPackShow = false
