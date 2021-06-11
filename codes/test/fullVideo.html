@@ -118,7 +118,9 @@
     <div id="count">
         <div class="video_box" v-if="!videoPackShow">
             <div class="video_mack" @click="viewVideo"></div>
-            <video class="video_v" src="../video/movie.mp4"></video>
+            <video class="video_v" src="../video/movie.mp4">
+                <source src="../video/movie.mp4" type="video/mp4">
+            </video>
         </div>
         <!-- 视频页 -->
         <div class="page page_video" v-if="videoPackShow">
