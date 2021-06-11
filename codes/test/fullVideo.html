@@ -34,6 +34,7 @@
         /* 视频 */
         .page_video {
             width: 100%;
+            height: 100%;
             background: #000000;
             position: absolute;
             left: 0;
@@ -44,8 +45,11 @@
         /*视频是以（0，0）为中心旋转的90度，所以left为100%*/
         #video {
             position: absolute;
-            /* margin-left: 4px; */
-            left: 100%;
+            top: 50%;
+            left: 50%;
+            object-fit: fill;
+            transform: rotate(90deg) translate(-50%, -50%);
+            transform-origin: 0px 0px;
             z-index: 1;
         }
 
@@ -118,8 +122,8 @@
     <div id="count">
         <div class="video_box" v-if="!videoPackShow">
             <div class="video_mack" @click="viewVideo"></div>
-            <video class="video_v" src="../video/movie.mp4">
-                <source src="../video/movie.mp4" type="video/mp4">
+            <video class="video_v">
+                <source src="https://codelibrarzhang.github.io/interview/codes/video/movie.mp4" type="video/mp4">
             </video>
         </div>
         <!-- 视频页 -->
@@ -127,10 +131,10 @@
             <!-- 视频开始按钮 -->
             <div class="quit" @click="quitFull">退出全屏</div>
             <!-- 视频 -->
-            <video ref="video" id="video" style="object-fit:fill;" controls playsinline="true" webkit-playsinline="true"
+            <video :style="getVideoStyle()" id="video" style="object-fit:fill;" controls playsinline="true" webkit-playsinline="true"
                 x-webkit-airplay="allow" airplay="allow" x5-video-player-type="h5" x5-video-player-fullscreen="true"
                 x5-video-orientation="portrait">
-                <source src="../video/movie.mp4" type="video/mp4">
+                <source src="https://codelibrarzhang.github.io/interview/codes/video/movie.mp4" type="video/mp4">
             </video>
         </div>
     </div>
@@ -144,59 +148,6 @@
             //     myVideo.play();
             // })
             var vConsole = new VConsole();
-            /* 获取屏幕高度 */
-            // var phone_height = document.documentElement.clientHeight;
-            // if (phone_height < 1496) {
-            //     // console.log('屏幕高度<1496');
-            //     var back_up = (1496 - phone_height) / 2;
-            //     $(".page_video").css("backgroundPosition", "0 -" + back_up + "px");
-            //     if (phone_height >= 1360) {
-            //         //华为手机&&苹果x
-            //     }
-            // } else {
-            //     // console.log('屏幕高度>1496');
-            //     $(".page_video").css("backgroundSize", "100% 100%");
-            // }
-
-            //视频横屏
-            var width = document.documentElement.clientWidth;
-            var height = document.documentElement.clientHeight;
-            $(".page_video").height(height + "px");
-
-            var video_width;
-            var video_height;
-            var video_top = 0;
-            var video_left = 0;
-            // 设置视频倒过来
-            if (width < height) {
-                //一个1920*1080的视频，到手机上高750时，宽度是1333.333
-                if (height < 1334) {
-                    console.log("手机分辨率高度 < 1333.33，视频横过来后宽度铺满，高度自适应后铺不满屏幕，所以向左平移一些居中");
-                    $("#video").width(height);
-                    video_width = $("#video").width();
-
-                    // 等比例自适应数值不是正好的，那就手动定高度
-                    video_height = video_width / 1920 * 1080;
-                    $("#video").height(video_height);
-
-                    //设置视频水平居中
-                    video_left = -(width - video_height) / 2;
-                } else {
-                    console.log("手机分辨率高度 > 1333.33，视频横过来后高度铺满，宽度自适应后铺不满屏幕，所以向下平移一些居中");
-                    $("#video").height(width);
-                    video_height = $("#video").height();
-
-                    // 等比例自适应数值不是正好的，那就手动定宽度
-                    video_width = (1920 / 1080) * $("#video").height();
-                    $("#video").width(video_width);
-
-                    //设置视频垂直居中
-                    video_top = (height - video_width) / 2;
-                }
-
-                //把调整好的数值赋给视频
-                $("#video").css({ 'left': "100%", "top": video_top + "px", "marginLeft": video_left + "px", 'transform': 'rotate(90deg)', 'transformOrigin': '0 0' });
-            }
             //视频页
             var myVideo = document.getElementById('video');
             //点击播放按钮
@@ -205,16 +156,6 @@
                 $(".video_info").hide();
                 myVideo.play();
             })
-            //监听视频被点击
-            // myVideo.addEventListener('touchstart', function () {
-            //     $(".start_video").hide();
-            //     $(".video_info").hide();
-            //     myVideo.play();
-            // });
-            //点击跳过按钮
-            // $(".btn_video").click(function () {
-            //     video_end();
-            // })
             //视频播放结束
             myVideo.addEventListener('ended', function () {
                 video_end();
@@ -245,6 +186,16 @@
                     },
                     quitFull: function () {
                         this.videoPackShow = false
+                    },
+                    getVideoStyle: function () {
+                        var width = this.clientWidth,
+                            height = this.clientHeight
+                        if (width < height) {
+                            return {
+                                width: height + 'px',
+                                height: 0.8 * width + 'px'
+                            }
+                        }
                     }
                 }
             })
