@@ -121,8 +121,8 @@
 <body>
     <div id="count">
         <div class="video_box" v-if="!videoPackShow">
-            <div class="video_mack" @click="viewVideo"></div>
-            <video class="video_v">
+            <!-- <div class="video_mack" @click="viewVideo"></div> -->
+            <video class="video_v" controls>
                 <source src="https://codelibrarzhang.github.io/interview/codes/video/movie.mp4" type="video/mp4">
             </video>
         </div>
@@ -192,8 +192,8 @@
                             height = this.clientHeight
                         if (width < height) {
                             return {
-                                width: height + 'px',
-                                height: 0.8 * width + 'px'
+                                width: 0.9 * height + 'px',
+                                height: width + 'px'
                             }
                         }
                     }
