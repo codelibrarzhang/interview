@@ -1,0 +1,544 @@
+<!doctype html>
+<html>
+    
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0,viewport-fit=cover" name="viewport" />
+    <title>A*寻路算法</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        
+        html,
+        body {
+            height: 100%;
+            font-size: 10px;
+        }
+        .container {
+            position: relative;
+            height: 100%;
+            overflow-y: auto;
+        }
+        .placeholder {
+            height: 250px;
+        }
+        .find-way {
+            position: relative;
+        }
+
+        .find-way_map {
+            width: 600px;
+            height: 900px;
+        }
+        .find-way_car {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            /* transition: all 1.5s linear; */
+        }
+
+        .find-way_car-img {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            -webkit-transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%);
+        }
+        .row {}
+
+        .row::after {
+            content: '';
+            display: block;
+            clear: both;
+            height: 0;
+            font-size: 0;
+            visibility: hidden;
+        }
+
+        .col {
+            width: 60px;
+            height: 60px;
+            line-height: 60px;
+            text-align: center;
+            background-color: aliceblue;
+            float: left;
+        }
+
+        .path {
+            background-color: orange;
+        }
+
+        .start {
+            background-color: green;
+        }
+
+        .end {
+            background-color: tomato;
+        }
+
+        .disable {
+            background-color: #6f6961;
+        }
+
+        
+        .next {
+            position: fixed;
+            top: 50%;
+            right: 0;
+            background-color: aqua;
+            border-radius: 10px;
+            padding: 3px 10px;
+        }
+    </style>
+</head>
+
+
+<body>
+    <div class="container">
+        <div class="placeholder"></div>
+        <div class="find-way">
+            <div class="find-way_map"></div>
+            <div class="find-way_car">
+                <img class="find-way_car-img">
+            </div>
+        </div>
+        
+        <div class="placeholder"></div>
+        <div class="placeholder"></div>
+    </div>
+    <div class="next">下一站</div>
+    <script src="../js/utils/utils.js"></script>
+    <script src="../js/jquery-2.1.1.min.js"></script>
+    <script>
+        var wHeight = document.body.clientHeight
+        var container = document.querySelector('.container')
+        var squareWidth, squareHeight
+        var moving = false
+        var maps = [],
+        data = [],
+        path = [],
+        speedTime = 500,
+        rotateTime = 200
+        // 原始数据
+        // var maps = [
+        //     [1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        //     [0, 1, 1, 0, 0, 0, 1, 0, 0, 0],
+        //     [0, 0, 0, 0, 1, 0, 0, 1, 1, 1],
+        //     [0, 0, 0, 0, 1, 1, 0, 1, 0, 1],
+        //     [0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
+        //     [0, 0, 0, 0, 0, 0, 1, 0, 0, 1],
+        //     [0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        //     [0, 1, 0, 0, 0, 0, 0, 0, 0, 0],
+        //     [0, 1, 0, 0, 0, 1, 0, 0, 0, 0],
+        //     [0, 0, 0, 1, 0, 0, 0, 0, 0, 0],
+        //     [0, 0, 0, 1, 0, 0, 0, 0, 0, 0],
+        //     [0, 0, 0, 1, 0, 0, 0, 0, 0, 0],
+        //     [0, 0, 0, 1, 0, 0, 0, 0, 0, 0],
+        //     [0, 0, 0, 1, 0, 0, 0, 0, 0, 0],
+        //     [0, 0, 0, 1, 0, 0, 0, 0, 0, 0]
+        // ]
+        // 起点
+        var start = {
+            r: 2,
+            c: 7
+        }
+        // 终点
+        var end = {
+            r: 0,
+            c: 0,
+
+        }
+        var cityList = [
+            {
+                r: 0,
+                c: 0,
+                id: 0
+            },
+            {
+                r: 2,
+                c: 7,
+                id: 1
+            },
+            {
+                r: 8,
+                c: 0,
+                id: 3
+            },
+            {
+                r: 11,
+                c: 9,
+                id: 4
+            },
+            {
+                r: 15,
+                c: 0,
+                id: 5
+            },
+            {
+                r: 20,
+                c: 3,
+                id: 6
+            },
+            {
+                r: 17,
+                c: 11,
+                id: 7
+            },
+            {
+                r: 31,
+                c: 2,
+                id: 8
+            },
+            {
+                r: 28,
+                c: 11,
+                id: 9
+            },
+            {
+                r: 33,
+                c: 7,
+                id: 99
+            }
+        ]
+        init()
+        function init () {
+            readFile()
+        }
+        function setOut () {
+            moving = true
+            var car = document.getElementsByClassName('find-way_car')[0]
+            car.style.top = start.r * 60 + 'px'
+            car.style.left = start.c * 60 + 'px'
+            path = findPath(data, start, end)
+            console.log(path)
+            setTimeout(function(){run(path, start)},500)
+        }
+        function readFile () {
+            $.ajax({
+                url: '../tmx/2.tmx',
+                type: 'get',
+                success: function (res) {
+                    var doc = document.createElement('div')
+                    doc.innerHTML = res
+                    console.log(3,doc)
+                    var str = doc.querySelector('data').innerHTML
+                    var width = getAttributeValue(doc, 'layer', 'width')
+                    var height = getAttributeValue(doc, 'layer', 'height')
+                    squareWidth = getAttributeValue(doc, 'map', 'tilewidth')
+                    squareHeight = getAttributeValue(doc, 'map', 'tileheight')
+                    maps = utils.parseMapData(str, width)
+                    console.log('total r, c',width,height)
+                    var mapDom = document.getElementsByClassName('find-way_map')[0]
+                    mapDom.style.width = width * 60 + 'px'
+                    mapDom.style.height = height * 60 + 'px'
+                    console.log(1,maps)
+                    // 地图数据
+                    data = formateMapData(maps)
+                    render(data)
+                    console.log(2,data)
+                    setOut()
+                }
+            })
+        }
+        function getAttributeValue (father ,element, attribute) {
+            return father.querySelector(element).getAttribute(attribute)
+        }
+        function formateMapData (maps) {
+            return maps.map(function (item, index) {
+                return item.map(function (citem, cindex) {
+                    var cobj = {
+                        r: index,
+                        c: cindex,
+                        val: citem,
+                        G: getG(index, cindex),
+                        H: getH(index, cindex),
+                        F: (getG(index, cindex) + getH(index, cindex)),
+                        start: (start.r == index && start.c == cindex),
+                        end: (end.r == index && end.c == cindex),
+                    }
+                    if (start.r == index && start.c == cindex) {
+                        start = cobj
+                    }
+                    return cobj
+                })
+            })
+        }
+        function findPath(points, start, end) {
+            var openList = []
+            var closeList = []
+            var myPath = []
+            closeList.push(start)
+            var cur = start
+            if ((start.r == end.r && Math.abs(start.c - end.c) == 1) || (Math.abs(start.r - end.r) == 1 && start.c == end.c)) {
+                end.P = cur
+                closeList.push(end)
+                cur = null
+                console.log('start与end相邻')
+            }
+            while (cur) {
+                if (!inClose(closeList, cur)) {
+                    closeList.push(cur)
+                }
+                var curRounds = GetAround(points, cur)
+
+                for (var i = 0; i < curRounds.length; i++) {
+                    if (curRounds[i].val == 1 && !inClose(closeList, curRounds[i]) && !inOpen(openList, curRounds[i])) {
+                        curRounds[i].P = cur
+                        openList.push(curRounds[i])
+                    }
+                }
+                openList.sort(function (a, b) {
+                    return a.F - b.F
+                })
+                cur = openList[0]
+                openList.splice(0, 1)
+                if (cur.H == 1) {
+                    closeList.push(cur)
+                    end.P = cur
+                    closeList.push(end)
+                    cur = null
+                }
+            }
+
+            var last = closeList[closeList.length - 1]
+
+            while (last) {
+                myPath.unshift(last)
+                last = last.P
+            }
+            // var rows = document.getElementsByClassName('row')
+            // for (var i = 0; i < rows.length; i++) {
+            //     for (var j = 0; j < path.length; j++) {
+            //         if (path[j].r == i) {
+            //             rows[i].childNodes[path[j].c].classList.add('path')
+            //         }
+            //     }
+            // }
+            return myPath
+        }
+        // Math.abs
+        function getG(r, c) {
+            return Math.abs(r - start.r) + Math.abs(c - start.c)
+        }
+        function getH(r, c) {
+            return Math.abs(r - end.r) + Math.abs(c - end.c)
+        }
+
+
+        function GetAround(points, current) {
+            var rounds = []
+            // 上
+            if (current.r - 1 >= 0) {
+                rounds.push(points[current.r - 1][current.c])
+            }
+            // 下
+            if (current.r + 1 < points.length) {
+                rounds.push(points[current.r + 1][current.c])
+            }
+            // 左
+            if (current.c - 1 >= 0) {
+                rounds.push(points[current.r][current.c - 1])
+            }
+            // 右
+            if (current.c + 1 < points[current.r].length) {
+                rounds.push(points[current.r][current.c + 1])
+            }
+            return rounds
+        }
+        function inOpen(list, current) {
+            for (var i = 0; i < list.length; i++) {
+                if (list[i].r == current.r && list[i].c == current.c) {
+                    return true
+                }
+            }
+            return false
+        }
+        function inClose(list, current) {
+            for (var i = 0; i < list.length; i++) {
+                if (list[i].r == current.r && list[i].c == current.c) {
+                    return true
+                }
+            }
+            return false
+        }
+        function render(points) {
+            var oFrag = document.createDocumentFragment()
+            points.forEach(function (item, index) {
+                var row = document.createElement('div')
+                oFrag.append(row)
+                row.className = 'row'
+                item.forEach(function (citem, index) {
+                    var col = document.createElement('div')
+                    col.className = 'col'
+                    if (citem.val == 0) col.classList.add('disable')
+                    if (citem.start) col.classList.add('start')
+                    if (citem.end) col.classList.add('end')
+                    col.innerHTML = citem.r + ',' + citem.c
+                    row.append(col)
+                })
+
+            })
+            document.getElementsByClassName('find-way_map')[0].append(oFrag)
+        }
+        
+        // function direction(path, current) {
+        //     for (var i = 0; i < path.length; i++) {
+        //         if (current.r == end.r && current.c == end.c) { // 终点
+        //             return 'over'
+        //         } else {
+        //             if (path[i].c == current.c && path[i].r == current.r) { // 当前点索引
+        //                 if (path[i + 1].r - current.r > 0) return 'down'
+        //                 if (path[i + 1].r - current.r < 0) return 'up'
+        //                 if (path[i + 1].c - current.c > 0) return 'right'
+        //                 if (path[i + 1].c - current.c < 0) return 'left'
+        //             }
+        //         }
+        //     }
+        // }
+
+        // 移动小车和地图
+        function moveCar(current, pre) {
+            var carImg = document.querySelector('.find-way_car-img')
+                        carImg.src = '../images/' + pre.direction + '.jpg'
+            var car = document.querySelector('.find-way_car')
+            // var top = +(car.style.top.replace(/px/,''))
+            // var left = +(car.style.left.replace(/px/,''))
+            car.style.left = add(car.style.left, pre.left) + 'px'
+            car.style.top = add(car.style.top, pre.top) + 'px'
+           
+            // var angle = utils.angle(current.c, current.r, pre.c, pre.r)
+            // angle = (angle == 0 && 1 / angle < 0) ? 180 : angle
+            // car.style.transform = 'rotate('+ angle +'deg)'
+            // console.log('角度', utils.angle(current.c, current.r, pre.c, pre.r))
+            // console.log('offsetTop', car.offsetTop, container.scrollTop)
+            if (car.offsetTop > wHeight / 2) {
+                container.scrollTo(0, car.offsetTop - wHeight / 2 + 60)
+                console.log('超出半屏')
+            } else {
+                if (car.offsetTop < container.scrollTop) {
+                    container.scrollTo(0, car.offsetTop)
+                    console.log('不在屏幕内')
+                }
+            }
+            run (path, pre)
+        }
+        
+        // 计算距下一步的位移，方向
+        function getpPre(path, current) {
+            for (var i = 0; i < path.length; i++) {
+                if (current.r == end.r && current.c == end.c) { // 终点
+                    moving = false
+                    return 'isOver'
+                }
+                if (path[i].c == current.c && path[i].r == current.r) { // 当前点索引
+                    console.log(current)
+                    var next = path[i+1]
+                    return {
+                        r: next.r,
+                        c: next.c,
+                        direction: direction(current.c, current.r, next.c, next.r),
+                        left: (next.c - current.c) * 60,
+                        top: (next.r - current.r) * 60
+                    }
+                }
+            }
+        }
+
+        // 根据点位判断方向
+        function direction (x1, y1, x2, y2) {
+            var angle = utils.angle(x1, y1, x2, y2)
+            if (angle == 0 && 1 / angle < 0) {
+                return 'left'
+            }
+            if (angle == 0 && 1 / angle > 0) {
+                return 'right'
+            }
+            if (angle == 90) {
+                return 'bottom'
+            }
+            if (angle == -90) {
+                return 'top'
+            }
+        }
+
+        // 累加
+        function add (x, y) {
+            if(typeof x == 'string') x = +(x.replace(/px/,''))
+            if(typeof y == 'string') y = +(y.replace(/px/,''))
+            return x + y
+        }
+        // 开始累加
+        function run (path, current) {
+            // for (var i = 0; i < path.length; i++) {
+            //     if (current.r == end.r && current.c == end.c) { // 终点
+            //         moving = false
+            //         return 'over'
+            //     } else {
+            //         if (path[i].c == current.c && path[i].r == current.r) { // 当前点索引
+            //             var pre = path[i+1]
+            //             break
+            //         }
+            //     }
+            // }
+            var pre = getpPre(path, current)
+            console.log('next',pre)
+            if (pre == 'isOver') {return}
+            if (current.direction == pre.direction) {
+                setTimeout(function () {
+                    moveCar(current, pre)
+                }, speedTime)
+            } else {
+                
+                setTimeout(function () {
+                    var carImg = document.querySelector('.find-way_car-img')
+                        carImg.src = '../images/' + pre.direction + '.jpg'
+                        // moveCar(current, pre)
+                    setTimeout(function () {
+                        moveCar(current, pre)
+                    }, speedTime)
+                }, rotateTime)
+            }
+            
+        }
+
+
+        $('.next').on('click', function () {
+            if (moving) return
+
+            if ((start.r == end.r && Math.abs(start.c - end.c) == 1) || (Math.abs(start.r - end.r) == 1 && start.c == end.c) || (end.r == cityList[cityList.length-1].r && end.c == cityList[cityList.length-1].c)) {
+                start = cityList[0]
+                end = cityList[1]
+            } else {
+                for (var i=0; i < cityList.length;i++) {
+                    if (end.r == cityList[i].r && end.c == cityList[i].c && i < cityList.length - 1) {
+                        console.log('end', i)
+                        start = end
+                        end = cityList[i+1]
+                        console.log(4,start, end)
+                        break
+                    }
+                }
+            }
+            console.log(5,start, end)
+            data = formateMapData(maps)
+            setOut()
+        })
+        // function mapStartEnd(points, start, end) {
+        //     var rows = document.getElementsByClassName('row')
+        //     for (var i = 0; i < rows.length; i++) {
+        //         for (var j = 0; j < 14; j++) {
+
+        //             if (path[j].r == i) {
+        //                 rows[i].childNodes[path[j].c].classList.add('path')
+        //             } else {
+        //                 rows[i].childNodes[path[j].c].classList.remove('path')
+        //             }
+        //         }
+        //     }
+        // }
+    </script>
+</body>
+
+</html>
