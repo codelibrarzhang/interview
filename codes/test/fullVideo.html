@@ -149,7 +149,12 @@
             </video>
         </div>
         <div class="input_box">
-            <span>金额：</span><input type="number" pattern="[0-9]*" placeholder="输入金额" />
+          <div>
+            <span>整数：</span><input type="number" pattern="[0-9]*" placeholder="输入" />
+          </div>
+          <div>
+            <span>小数：</span><input ref="decimal" v-model="monitor" type="number" placeholder="输入" />
+          </div>
         </div>
     </div>
         <script src="../js/vconsole.min.js"></script>
@@ -185,9 +190,16 @@
                     clientWidth: document.documentElement.clientWidth,
                     clientHeight: document.documentElement.clientHeight,
                     videoPackShow: false,
+                    monitor: ''
                 },
                 mounted: function () {
 
+                },
+                watch: {
+                    'monitor': function (nV, oV) {
+                      var attribute = this.$refs.decimal
+                      console.log('--------------', attribute.value, nV)
+                    }
                 },
                 methods: {
                     viewVideo: function () {
