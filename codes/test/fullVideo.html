@@ -150,10 +150,13 @@
         </div>
         <div class="input_box">
           <div>
-            <span>整数：</span><input type="number" pattern="[0-9]*" placeholder="输入" />
+            <span>number整数：</span><input type="number" pattern="[0-9]*" placeholder="输入" />
           </div>
           <div>
-            <span>小数：</span><input ref="decimal" v-model="monitor" @input="monitorInput($event)" type="tel" placeholder="输入" />
+            <span>number小数：</span><input type="number" placeholder="输入" />
+          </div>
+          <div>
+            <span>tel小数：</span><input ref="decimal" v-model="monitor" @input="monitorInput($event)" type="tel" placeholder="输入" />
           </div>
         </div>
     </div>
