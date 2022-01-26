@@ -153,7 +153,7 @@
             <span>number整数：</span><input type="number" pattern="[0-9]*" placeholder="输入" />
           </div>
           <div>
-            <span>number小数：</span><input type="number" placeholder="输入" />
+            <span>number小数：</span><input type="number" v-model="doubble" placeholder="输入" />
           </div>
           <div>
             <span>number小数：</span><input type="number" pattern="[0-9\.]*" placeholder="输入" />
@@ -205,7 +205,10 @@
                 watch: {
                     'monitor': function (nV, oV) {
                       var attribute = this.$refs.decimal
-                      console.log('1111111111', attribute.value, nV, this.monitor)
+                      console.log('monitor', attribute.value, nV, this.monitor)
+                    },
+                    'doubble': function (nV, oV) {
+                      console.log('doubble', attribute.value, nV, this.doubble)
                     }
                 },
                 methods: {
