@@ -153,7 +153,7 @@
             <span>number整数：</span><input type="number" pattern="[0-9]*" placeholder="输入" />
           </div>
           <div>
-            <span>number小数：</span><input type="number" v-model="doubble" placeholder="输入" />
+            <span>number小数：</span><input type="number" v-model="doubble" @input.native="doubbleInput" placeholder="输入" />
           </div>
           <div>
             <span>number小数：</span><input type="number" pattern="[0-9\.]*" placeholder="输入" />
@@ -235,7 +235,15 @@
                         }
                     },
                     monitorInput: function (ele) {
-                        console.log( '2222222', this.monitor, ele.target.value)
+                        console.log( 'monitorInput', this.monitor, ele.target.value)
+                    },
+                    doubbleInput: function () {
+                        console.log('doubbleInput', this.doubble)
+                        var amount = this.doubble
+                        amount = amount.replace(/[^\d.]/g, '') //过滤非数字、小数点
+                        amount = amount.replace(/^0{2,}|^0{1}\d+/g, num.slice(1, 2)) //过滤首位多0
+                        amount = amount.replace(/^\./g, '0.') //过滤首位小数点
+                        console.log('amount', amount)
                     }
                 }
             })
