@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>移动背景-缓动</title>
+    <script src="../js/utils/rem.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+        html, body {
+            height: 100%;
+        }
+        .outbox {
+            background: url(../images/bg1.jpg) no-repeat left top / 20rem auto;
+            height: 100%;
+            -webkit-transition: all 1s linear;
+            transition: all 1s linear;
+            position: relative;
+            overflow-x: hidden;
+        }
+        .car {
+            width: 2.08rem;
+            height: 1rem;
+            background: url(../images/right.jpg) no-repeat left center / 100% auto;
+            position: absolute;
+            left: 0;
+            top: 6rem;
+            -webkit-transition: -webkit-transform 1s linear;
+            transition: transform 1s linear;
+        }
+        .progress {}
+        .progress .progress_dark {
+            width: 100%;
+            height: 4px;
+            background-color: rgb(137, 141, 145);
+            position: absolute;
+            top: 6rem;
+            left: 0;
+        }
+        .progress .progress_light {
+            width: 30%;
+            height: 100%;
+            background-color: rgb(134, 226, 72);
+            -webkit-transition: all 1s linear;
+            transition: all 1s linear;
+        }
+        .no_duration {
+            transition-duration: 0s!important;;
+        }
+        .invisible {
+            opacity: 0;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div id="container" class="outbox" :style="styleObj" :class="{no_duration: stopAni}">
+        <div @click="changeBackground">2、背景转场</div>
+        <div @click="changeProgress">1、进度变化</div>
+        <div class="car" :style="carPosition" :class="{invisible: resetCar}"></div>
+        <div class="progress">
+            <div class="progress_dark">
+                <div class="progress_light" :style="progressWidth" :class="{no_duration: stopAni}"></div>
+            </div>
+        </div>
+    </div>
+    <script src="../js/vconsole.min.js"></script>
+    <script type="text/javascript">
+        var vConsole = new VConsole();
+        var vm = new Vue({
+            el: '#container',
+            data: {
+                scaleRatio: 0,
+                srcollLeft: 0,
+                styleObj: {
+                    backgroundPosition: '0 0'
+                },
+                carPosition: {
+                    transform: 'translateX(0)'
+                },
+                carWidth: 114,
+                progressWidth: {
+                    width: '30%'
+                },
+                aniLoop: null,
+                stopAni: false,
+                resetCar: false
+            },
+            mounted: function () {
+                this.scaleRatio =  document.documentElement.clientWidth / 375
+            },
+            methods: {
+                startAni: function () {
+
+                    this.removeAni()
+                    this.removeCar()
+                    this.increaseProgress()
+                },
+                changeBackground: function () {
+                    var self = this
+                    // 移动背景：1车移出屏幕外、2背景移动至下一屏、3进度条回零
+                    
+                    console.log('背景~')
+                    this.removeBackgroundIamge(375)
+                    this.removeCar(375+104)
+                    this.increaseProgress('0%')
+                    
+                    // 更换背景：1停止缓动，2替换背景，3恢复缓动
+                    
+                    
+                    setTimeout(function () {
+                        self.stopAni = true
+                        self.resetCar = true
+                        self.removeCar(-104)
+                        self.removeBackgroundIamge(0)
+                    // 恢复初始位置：车、进度条    
+                        setTimeout(function () {
+                            self.resetCar = false
+                            self.stopAni = false
+                            self.increaseProgress('30%')
+                            self.removeCar(0)
+                        }, 1000)
+                        
+                    }, 1000)
+
+                    // 初始化各项位置：1
+                },
+                // 
+                changeProgress: function () {
+                    console.log('进度~')
+                    this.removeBackgroundIamge(0)
+                    this.removeCar(375 - 104)
+                    this.increaseProgress('100%')
+                },
+                // removeAni: function () {
+                //     var self = this
+                //     console.log('self.srcollLeft', self.srcollLeft)
+                //     self.srcollLeft = 375
+                //     self.removeBackgroundIamge()
+                // },
+                removeBackgroundIamge: function (target) {
+                    var self = this
+                    self.styleObj.backgroundPosition = '-' + (target * self.scaleRatio) + 'px 0'
+                },
+                removeCar: function (target) {
+                    var self = this
+                    if (target.toString().indexOf('%') > -1) {
+                        var attrValue = target
+                    } else {
+                        var attrValue = (target * self.scaleRatio) + 'px'
+                    }
+                    self.carPosition.transform = 'translateX(' + attrValue + ')'
+                },
+                increaseProgress: function (target) {
+                    var self = this
+                    if (target.toString().indexOf('%') > -1) {
+                        var attrValue = target
+                    } else {
+                        var attrValue = (target * self.scaleRatio) + 'px'
+                    }
+                    self.progressWidth.width = attrValue
+                },
+            }
+        })
+    </script>
+</body>
+
+</html>

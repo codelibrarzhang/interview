@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>移动背景-动画</title>
+    <script src="../js/utils/rem.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+        html, body {
+            height: 100%;
+        }
+        .outbox {
+            background: url(../images/bg1.jpg) no-repeat left top / 20rem auto;
+            height: 100%;
+        }
+        .car {
+            width: 2.08rem;
+            height: 1rem;
+            background: url(../images/right.jpg) no-repeat left center / 100% auto;
+            position: absolute;
+            left: 0;
+            top: 6rem;
+        }
+        .progress {}
+        .progress .progress_dark {
+            width: 100%;
+            height: 4px;
+            background-color: rgb(137, 141, 145);
+            position: absolute;
+            top: 6rem;
+            left: 0;
+        }
+        .progress .progress_light {
+            width: 30%;
+            height: 100%;
+            background-color: rgb(134, 226, 72);
+        }
+    </style>
+
+</head>
+
+<body>
+    <div id="container" class="outbox" :style="styleObj">
+        <div @click="startAni">开始</div>
+        <div class="car" :style="carPosition" :class="{invisible: resetCar}"></div>
+        <div class="progress">
+            <div class="progress_dark">
+                <div class="progress_light" :style="progressWidth"></div>
+            </div>
+        </div>
+    </div>
+    <script src="../js/vconsole.min.js"></script>
+    <script type="text/javascript">
+        var vConsole = new VConsole();
+        var vm = new Vue({
+            el: '#container',
+            data: {
+                scaleRatio: 0,
+                srcollLeft: 0,
+                carLeft: 0,
+                progressLeft: 0,
+                styleObj: {
+                    backgroundPosition: '0 0'
+                },
+                carPosition: {
+                    transform: 'translateX(0)'
+                },
+                progressWidth: {
+                    width: '104px'
+                },
+                aniLoop: null,
+                carAniLoop: null,
+                progressAniLoop: null,
+                resetCar: false
+            },
+            mounted: function () {
+                this.scaleRatio =  document.documentElement.clientWidth / 375
+                // this.removeAni()
+            },
+            methods: {
+                startAni: function () {
+                    this.removeAni()
+                    var extent = 375-104
+                    this.removeCarAni(extent,5)
+                    this.removeProgressAni(375)
+                },
+                removeAni: function () {
+                    var self = this
+                    console.log('self.srcollLeft', self.srcollLeft)
+                    if (self.srcollLeft == 375) {
+                        cancelAnimationFrame(self.aniLoop)
+                        return false
+                    }
+                    self.srcollLeft += 5
+                    self.removeBackgroundIamge(self.srcollLeft)
+                    self.aniLoop = requestAnimationFrame(self.removeAni)
+                },
+                removeBackgroundIamge: function (target) {
+                    var self = this
+                    self.styleObj.backgroundPosition = '-' + (target * self.scaleRatio) + 'px 0'
+                },
+                removeCarAni: function (target, step) {
+                    console.log('car config：', target, step)
+                    var self = this
+                    if (self.carLeft >= target) {
+                        self.removeCar(target)
+                        cancelAnimationFrame(self.carAniLoop)
+                        return false
+                    }
+                    self.carLeft = self.carLeft + step
+                    self.removeCar(self.carLeft)
+                    console.log('回调前', target, step)
+                    self.carAniLoop = requestAnimationFrame(function () {
+                        self.removeCarAni(target, step)
+                    })
+                },
+                removeCar: function (target) {
+                    var self = this
+                    self.carPosition.transform = 'translateX(' + target * self.scaleRatio + 'px)'
+                },
+                removeProgressAni: function (target) {
+                    var self = this
+                    if (self.progressLeft >= 375) {
+                        cancelAnimationFrame(self.progressAniLoop)
+                    }
+                    self.progressLeft += 5
+                    self.removeProgress(self.progressLeft)
+                    self.progressAniLoop = requestAnimationFrame(function () {
+                        self.removeProgressAni(target)
+                    })
+                },
+                removeProgress: function (target) {
+                    var self = this
+                    self.progressWidth.width = target * self.scaleRatio + 'px'
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>

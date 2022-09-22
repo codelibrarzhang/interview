@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+        <title>动态添加</title>
+        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+        <style>
+            * {
+                padding: 0;
+                margin: 0;
+            }
+            
+        </style>
+        
+	</head>
+	<body>
+		<div id="count">
+            <div class="timer1"></div>
+            <div class="timer2"></div>
+        </div>
+    <script type="text/javascript">
+    var vConsole = new VConsole();
+    var vm = new Vue({
+        el: '#count',
+        data: {
+        },
+        mounted: function () {
+        },
+        methods: {
+            loadScript: function () {
+                var jsFils = [
+                    {
+                        url: '',
+                        callback: function () {
+                            var text = window.location.href;
+                            if ((/\/dev\//g).test(text) || (/\/test\//g).test(text) || (/\/pre\//g).test(text)) {
+                                var vConsole = new window.VConsole();
+                            }
+                        }
+                    }
+                ]
+                for (var i = 0; i < jsFils.length; i++) {
+                    this.addScript(jsFils[i])
+                }
+            },
+            addScript: function (config) {
+                var cur_script = document.createElement('script');
+                cur_script.type = 'text/javascript';
+                cur_script.charset = 'UTF-8';
+                cur_script.src = config.url;
+                script.onload = function () {
+                    if (config.callback && typeof config.callback == 'function') {
+                        config.callback()
+                    }
+                };
+                document.head.appendChild(cur_script);
+            }
+
+        }
+    })
+	</script>
+	</body>
+</html>

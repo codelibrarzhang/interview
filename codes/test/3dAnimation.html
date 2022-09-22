@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
 
@@ -22,6 +23,7 @@
             -webkit-perspective: 1000px;
             -moz-perspective: 1000px;
             -ms-perspective: 1000px;
+            -webkit-transform-style: preserve-3d;
             transform-style: preserve-3d;
             perspective: 1000px;
             display: inline-block;
@@ -46,8 +48,8 @@
             top: 0;
             -webkit-backface-visibility: hidden;
             backface-visibility: hidden;
-            /* transition-property: all;
-            transition-duration: 1.5s; */
+            transition-property: all;
+            transition-duration: 1.5s;
         }
         
         .qian {
@@ -56,6 +58,7 @@
 
         .hou {
             background-color: rgb(90, 53, 90);
+            -webkit-transform: rotateY(180deg);
             transform: rotateY(180deg);
         }
 
@@ -75,20 +78,22 @@
             transform: rotateY(360deg);
         } */
         .shake-ani .qian{
-            -webkit-animation: shake 0.5s;
-            animation: shake 0.5s;
+            /* -webkit-animation: shake 0.5s;
+            animation: shake 0.5s; */
         }
         .rotate-ani .qian {
-            -webkit-animation: rotateBefore 0.5s 1s;
-            animation: rotateBefore 0.5s 1s;
+            -webkit-animation: rotateBefore 0.5s 0.5ss;
+            animation: rotateBefore 0.5s 0.5s;
             -webkit-animation-fill-mode: forwards;
             animation-fill-mode: forwards;
+            
         }
         .rotate-ani .hou {
-            -webkit-animation: rotateAfter 0.5s 1s;
-            animation: rotateAfter 0.5s 1s;
+            -webkit-animation: rotateAfter 0.5s 0.5s;
+            animation: rotateAfter 0.5s 0.5ss;
             -webkit-animation-fill-mode: forwards;
             animation-fill-mode: forwards;
+            
         }
         @keyframes shake {
             0% {-webkit-transform: translateX(0);transform: translateX(0);}
@@ -146,6 +151,7 @@
                     aniDom.addEventListener('animationend', self.secondAni)
                     aniDom.addEventListener('webkitAnimationEnd', self.secondAni)
                     self.times = 0
+                    self.secondAni()
                 },
                 secondAni: function () {
                     var self = this
