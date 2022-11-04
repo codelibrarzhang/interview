@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>布局</title>
+    <script src="../js/utils/rem.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+
+        .container {}
+        .tab_bar {
+            position: -webkit-sticky;
+            position: sticky;
+            top: 0;
+            background-color: #fff;
+        }
+        .full_screen {
+            height: 100vh;
+            background-color: #f5f5f5;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="tab_bar">
+            <span>1</span>
+            <span>2</span>
+        </div>
+        <div class="full_screen">
+
+        </div>
+    </div>
+    <script src="../js/vconsole.min.js"></script>
+    <script type="text/javascript">
+        var vConsole = new VConsole();
+        var vm = new Vue({
+            el: '.container',
+            data: {
+            },
+            mounted: function () {
+            },
+            methods: {
+
+
+            }
+        })
+    </script>
+</body>
+
+</html>

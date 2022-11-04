@@ -10,7 +10,24 @@
                 padding: 0;
                 margin: 0;
             }
-            
+            .progress-bar{
+  width: 100%;
+  height: 30px;
+  overflow: hidden;
+  box-sizing: border-box;
+  border-radius: 24px;
+  background-color: rgba(180, 160, 120, .2);
+  position: relative;
+}
+.progress-bg{
+  width: 10%;
+  height: 100%;
+  overflow: hidden;
+  box-sizing: border-box;
+  background-image: linear-gradient(135deg, #00BFFF 25%,#FA8072 0,#FA8072 50%,#00BFFF 0,#00BFFF 75%, #FA8072 0);
+  border-radius: 24px;
+  background-size: 32px 100%;
+}
         </style>
         
 	</head>
@@ -19,6 +36,7 @@
             <div class="timer1"></div>
             <div class="timer2"></div>
         </div>
+        <div class="progress-bar"> <div class="progress-bg"></div> </div>
     <script src="../js/vconsole.min.js"></script>
     <script type="text/javascript">
     var vConsole = new VConsole();
