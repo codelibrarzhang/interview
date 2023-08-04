@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+        <title>时间戳</title>
+        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+        <style>
+            * {
+                padding: 0;
+                margin: 0;
+            }
+        </style>
+        
+	</head>
+	<body>
+		<div id="count">
+            <div class="block"></div>
+        </div>
+    <script src="../js/vconsole.min.js"></script>
+    <script type="text/javascript">
+
+
+    function ajaxFunc (config) {
+        // 配置信息
+        // 请求方式，get可以省略不传
+        var method = (config.method || 'get').toUpperCase()
+        // 请求地址
+        var url = config.url
+        // 请求参数
+        var data = config.data
+        // 同步、异步，true（异步）可以省略不传
+        var flag = config.flag || true
+        // 请求成功回调
+        var successCallback = config.success
+        // 请求失败回调
+        var errorCallback = config.error
+
+        // 创建ajax对象兼容
+        var xhr = null
+        if (window.XMLHttpRequest) {
+            // IE7+,Firefox,Chrome,Opera,Safari
+            xhr = new XMLHttpRequest()
+        } else {
+            // IE6,IE5
+            xhr = new ActiveXObject('Micorosoft.XMLHttp')
+        }
+
+        // 发起ajax请求
+        if (0) {
+
+        }
+        // get方式
+        xhr.open('get', url + '?' + data)
+
+    }
+
+    
+
+
+    var vConsole = new VConsole();
+    var vm = new Vue({
+        el: '#count',
+        data: {
+        },
+        mounted: function () {
+            
+        },
+        methods: {
+
+        }
+    })
+	</script>
+	</body>
+</html>

@@ -1,0 +1,126 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>时间戳</title>
+    <script src="../js/vue@2.js"></script>
+    <script src="../js/qrcode.js"></script>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+
+        .outbox {
+            position: relative;
+           height: 100vh;
+        }
+        .leftText {
+            height: 58px;
+            width: 200px;
+            position: absolute;
+            left: 0;
+            top: 150px;
+            background-color: blanchedalmond;
+            overflow: hidden;
+        }
+        .content {
+            width: 100%;
+            height: 100%;
+        }
+        .scroll {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            /* transition: width 0.8s, font-size 0.8s; */
+            padding: 2px 10px;
+            background-color: rgb(209, 191, 168);
+            border-radius: 20px;
+        }
+        .text1 {
+            
+        }
+    </style>
+
+</head>
+
+<body>
+    <div class="outbox">
+        <div class="leftText">
+            <div class="content" ref="leftContent"></div>
+        </div>
+    </div>
+    <script src="../js/vconsole.min.js"></script>
+    <script type="text/javascript">
+        var vConsole = new VConsole();
+        var vm = new Vue({
+            el: '.outbox',
+            data: {
+                location: {
+                    transform: 'inherit',
+                    fontSize: '16px'
+                },
+                textList: ['这是一行文字', '这是二行文字', '这是三行文字', '这是三行文字', '这是三行文字']
+            },
+            mounted: function () {
+                // var self = this
+                // setTimeout(function () {
+                //     self.location.transform = 'translateY(-100px)'
+                //     self.location.fontSize = '12px'
+                // }, 1000)
+                    this.renderText()
+                    this.upStart(this.textList, 1)
+            },
+            methods: {
+                renderText () {
+                    var self = this
+                    const fragment = document.createDocumentFragment()
+                    this.textList.forEach((element, index) => {
+                        var textNode = document.createElement('div')
+                        textNode.className = `scroll text${index}`
+                        textNode.innerHTML = element
+                        textNode.style.fontSize = `16px`
+                        textNode.style.bottom = `-${index * 28}px`
+                        textNode.style.width = `100px`
+                        textNode.style.transition = `width 1s, font-size 1s`
+                        fragment.appendChild(textNode)
+                    })
+                    document.querySelector('.leftText .content').appendChild(fragment)
+                },
+                upStart (arr, n) {
+                    var self = this
+                    if (n == arr.length) {
+                        return
+                    }
+                    setTimeout(() => {
+                        self.moveStep(n)
+                        n++
+                        self.upStart(arr, n)
+                    }, 500)
+                },
+                moveStep (n) {
+                    var leftContent = this.$refs.leftContent
+                    var scrollText = document.querySelectorAll('.scroll')
+                    leftContent.style.transition = 'transform 0.8s'
+                    leftContent.style.transform = `translateY(-${28 * n}px)`
+                    scrollText[n-1].style.fontSize = '14px'
+                    scrollText[n-1].style.width = '50px'
+                    for (var i = 0; i < n - 1; i++) {
+                        scrollText[i].style.opacity = 0.3
+                        // scrollText[i].style.fontSize = '12px'
+                        // scrollText[i].style.width = '20px'
+                    }
+                },
+            }
+        })
+    </script>
+</body>
+
+</html>

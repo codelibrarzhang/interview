@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+        <title>延时加载测试</title>
+        <script src="https://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+        <style>
+            * {
+                padding: 0;
+                margin: 0;
+            }
+            html, body {
+                height: 100%;
+            }
+            .main {
+                height: 100vh;
+            }
+            .ani_box {
+                width: 100%;
+                height: 300px;
+                background-color: lightslategrey;
+            }
+            .domAni {
+                width: 100%;
+                height: 300px;
+                background-color: rgb(54, 91, 128);
+            }
+        </style>
+        
+	</head>
+	<body>
+        <div class="main">
+            <div class="ani_box"></div>
+            <div class="lottie domAni" data-animation-path="../json/ani.json" data-anim-loop="false" data-name="ninja"></div>
+        </div>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.11.0/lottie.min.js"></script>
+        
+        <script>
+            var jsonAni
+            function loadEnd (a) {
+                console.log('onComplete', a)
+            }
+        window.onload = () => {
+            jsonAni = lottie.loadAnimation({
+                name: 'sun',
+                container: document.getElementsByClassName('ani_box')[0], // the dom element that will contain the animation
+                renderer: 'canvas',
+                loop: false,
+                autoplay: true,
+                path: '../json/ani.json', // the path to the animation json
+                // onComplete: function () {
+                //     console.log('onComplete', this.arrguments)
+                // },
+                // onLoopComplete: function () {
+                //     console.log('onLoopComplete', this.arrguments)
+                // },
+                // onEnterFrame: function () {
+                //     console.log('onEnterFrame', this.arrguments)
+                // },
+                // onSegmentStart: function () {
+                //     console.log('onSegmentStart', this.arrguments)
+                // },
+            });
+            console.log('jsonAni', jsonAni)
+            // setTimeout(function () {
+            //     // jsonAni.setDirection(-1)
+            //     jsonAni.setSpeed(0.5)
+            //     // jsonAni.play()
+            // }, 100)
+            // lottie.setSpeed(0.5, 'sun')
+            
+            jsonAni.addEventListener('config_ready', function () {console.log('config_ready')})
+            jsonAni.addEventListener('data_ready', function () {console.log('data_ready ')})
+            jsonAni.addEventListener('data_failed', function () {console.log('data_failed ')})
+            jsonAni.addEventListener('DOMLoaded', function () {console.log('DOMLoaded ')})
+            jsonAni.addEventListener('loaded_images', function () {console.log('loaded_images  ', jsonAni)})
+            jsonAni.addEventListener('complete', function () {console.log('complete结束')})
+        }
+        
+            
+        </script>
+	</body>
+</html>

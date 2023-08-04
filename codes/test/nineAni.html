@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>九宫格动画</title>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script> -->
+    <script src="../js/vue@2.js"></script>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+        .space_block {
+            height: 80px;
+        }
+        .prize_box {
+            width: 275px;
+            display: -webkit-flex;
+            display: flex;
+            -webkit-justify-content: center;
+            justify-content: center;
+            -webkit-flex-wrap: wrap;
+            flex-wrap: wrap;
+            -webkit-justify-content: space-between;
+            justify-content: space-between;
+            margin: 0 auto;
+        }
+        .prize_item {
+            display: -webkit-flex;
+            display: flex;
+            flex-direction: column;
+            -webkit-align-items: center;
+            align-items: center;
+            -webkit-justify-content: center;
+            justify-content: center;
+            -webkit-flex-wrap: wrap;
+            flex-wrap: wrap;
+            width: 83px;
+            height: 58px;
+            background-color: brown;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+        .prize_item.hold {
+            background-color: burlywood;
+        }
+        .prize_item.draw_btn {
+            flex-direction: row;
+        }
+        .prize_item_img {
+            width: 80%;
+        }
+        .prize_item_name {
+            width: 80%;
+            text-align: center;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div id="count">
+        <div class="space_block"></div>
+        <div class="prize_box">
+            <div class="prize_item" :class="{hold: currentIndex == index, draw_btn: item.type == 'drawbtn'}" v-for="(item, index) in awardBoxList" @click="startDraw(item, 1)">
+                <template v-if="item.type == 'prize' || item.type == 'empty'">
+                    <img class="prize_item_img" :src="item.prizeImgUrl">
+                    <div class="prize_item_name">{{item.prizeName}}</div>
+                </template>
+                <template v-else>
+                    <div class="prize_item_name">立即</div>
+                    <div class="prize_item_name">抽奖</div>
+                </template>
+                
+            </div>
+        </div>
+        <div class="space_block"></div>
+        <div class="prize_box">
+            <div class="prize_item" :class="{hold: currentIndex == index, draw_btn: item.type == 'drawbtn'}" v-for="(item, index) in awardBoxList" @click="startDraw(item, 2)">
+                <template v-if="item.type == 'prize' || item.type == 'empty'">
+                    <img class="prize_item_img" :src="item.prizeImgUrl">
+                    <div class="prize_item_name">{{item.prizeName}}</div>
+                </template>
+                <template v-else>
+                    <div class="prize_item_name">立即</div>
+                    <div class="prize_item_name">抽奖</div>
+                </template>
+                
+            </div>
+        </div>
+        
+    </div>
+    <script src="../js/vconsole.min.js"></script>
+    <script>
+        var vm = new Vue({ 
+            el: '#count',
+            data: {
+                currentIndex: -1,
+                lastIndex: -1,
+                awardBoxList: [
+                    {
+                        type: 'prize',
+                        prizeName: '奖品',
+                        prizeImgUrl: '../images/02.png',
+                        prizeIndex: 0
+                    },
+                    {
+                        type: 'prize',
+                        prizeName: '奖品',
+                        prizeImgUrl: '../images/02.png',
+                        prizeIndex: 1
+                    },
+                    {
+                        type: 'empty',
+                        prizeName: '谢谢参与',
+                        prizeImgUrl: '../images/ico_myprize@2x.png',
+                        prizeIndex: 2
+                    },
+                    {
+                        type: 'prize',
+                        prizeName: '奖品',
+                        prizeImgUrl: '../images/02.png',
+                        prizeIndex: 3
+                    },
+                    {
+                        type: 'drawbtn',
+                        btnTopName: '立即',
+                        btnBottomName: '抽奖',
+                        prizeIndex: 4
+                    },
+                    {
+                        type: 'prize',
+                        prizeName: '奖品',
+                        prizeImgUrl: '../images/02.png',
+                        prizeIndex: 5
+                    },
+                    {
+                        type: 'prize',
+                        prizeName: '奖品',
+                        prizeImgUrl: '../images/02.png',
+                        prizeIndex: 6
+                    },
+                    {
+                        type: 'prize',
+                        prizeName: '奖品',
+                        prizeImgUrl: '../images/02.png',
+                        prizeIndex: 7
+                    },
+                    {
+                        type: 'prize',
+                        prizeName: '奖品',
+                        prizeImgUrl: '../images/02.png',
+                        prizeIndex: 8
+                    }
+                ],
+                realPrize: [],
+                aniOrder: [0, 1, 2, 5, 8, 7, 6, 3],
+                drawend: true,
+                stopMoving: false,
+                drawResult: {
+                    type: '',
+                    prizeName: '',
+                    prizeIndex: ''
+                }
+
+            },
+            mounted: function () {
+                // this.realPrize = this.getRealPrize()
+                // this.loopMove()
+                this.currentIndex = this.lastIndex = this.getDefaultIndex()
+            },
+            methods: {
+                // getRealPrize: function () {
+                //     return this.awardBoxList.filter(item => {
+                //         return item.type !== 'drawbtn'
+                //     })
+                // },
+                getDefaultIndex: function () {
+                    // return this.awardBoxList[0].prizeIndex
+                    return this.aniOrder[0]
+                },
+                startDraw: function (item, type) {
+                    if (item.type == 'drawbtn') {
+                        if (type == 1) {
+                            if (!this.drawend) return false
+                            console.log('有效点击抽奖', this.drawend)
+                            this.drawend = false
+                            this.moveStep(this.currentIndex, 0)
+                            setTimeout(() => {
+                                var mockIndex = Math.floor(Math.random() * 8)
+                                this.drawResult = {
+                                    prizeIndex: mockIndex == 4 ? 0 : mockIndex
+                                }
+                            }, 100)
+                        } else {
+                            if (!this.drawend) return false
+                            console.log('有效点击抽奖', this.drawend)
+                            this.drawend = false
+                            this.startMove(this.currentIndex, 0)
+                            setTimeout(() => {
+                                var mockIndex = Math.floor(Math.random() * 8)
+                                this.drawResult = {
+                                    prizeIndex: mockIndex == 4 ? 0 : mockIndex
+                                }
+                            }, 100)
+                        }
+                        
+                        // setTimeout(() => {
+                        //     console.log('公布结果')
+                        //     this.drawend = true
+                        // }, 3600)
+                    }
+                },
+                // 先转动三圈，再看抽中的奖品
+                // 前两圈半快速转动，后半圈减速转动
+                moveStep: function (i, laps) {
+                    var self = this
+                    if (i > 7) i = 0
+                    // 拿到当前位置的prizeIndex，控制亮的样式
+                    this.currentIndex = this.awardBoxList[this.aniOrder[i]].prizeIndex
+                    // 对比当前位置的prizeIndex与上次中奖位置的prizeIndex，统计转动圈数
+                    if (this.lastIndex == this.currentIndex) {
+                        laps++
+                    }
+                    // 第三圈后半段开始减速，给用户奖品即将揭晓的感觉
+                    var nextTime = ((laps == 3 && this.moreThanHalf(i)) || laps > 3) ? 400 : 100
+                    console.log(this.currentIndex, laps, nextTime)
+                    // 大于三圈，且已经拿到抽奖结果后，在中奖的位置停下；否则继续转动，直到满足条件
+                    if (laps > 3 && this.drawResult.prizeIndex == this.currentIndex) {
+                        console.log('抽中', this.currentIndex)
+                        this.lastIndex = this.currentIndex
+                        this.drawend = true
+                        return false
+                    }
+                    setTimeout(function () {
+                        i++
+                        self.moveStep(i, laps)
+                    }, nextTime)
+                },
+                // 距上次中奖位置，超过半数
+                // 0 1 2 3 4 5 6 7
+                // 0  >3
+                // 1  >4 || <1
+                // 2  >5 || <2
+                // 3  >6 || <3
+                // 4  <4
+                // 5  >0 && <5
+                // 6  >1 && <6
+                // 7  >2
+                moreThanHalf: function (i) {
+                    var location = this.aniOrder.indexOf(this.lastIndex)
+                    if (location == 0) return i > location + 3
+                    if (location > 0 && location < 4) return i > location + 3 || i < location
+                    if (location == 4) return i < 4
+                    if (location > 4) return i > location - 5 && i < location
+                },
+                startMove: function (i, laps, fastTime, slowTime) {
+                    var self = this
+                    // 停止动画
+                    if (this.stopMoving) {
+                        return false
+                    }
+                    // 初始值
+                    var fastTime = fastTime || 100
+                    var slowTime = slowTime || 400
+                    // 下标循环
+                    if (i > 7) i = 0
+                    // 通过下标拿到当前位置的prizeIndex，控制亮的样式
+                    this.currentIndex = this.aniOrder[i]
+                    // 统计转动圈数，对比当前位置的prizeIndex与上次中奖位置的prizeIndex，相同则为一圈
+                    if (this.lastIndex == this.currentIndex) {
+                        laps++
+                    }
+                    // 第三圈后半段开始减速，给用户奖品即将揭晓的感觉
+                    var nextTime = ((laps == 3 && this.moreThanHalf(i)) || laps > 3) ? slowTime : fastTime
+                    console.log(this.currentIndex, laps, nextTime)
+                    
+                    setTimeout(function () {
+                        i++
+                        self.startMove(i, laps, fastTime, slowTime)
+                    }, nextTime)
+                },
+                stopMove: function () {
+                    this.stopMoving = true
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>
