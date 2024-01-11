@@ -272,6 +272,9 @@
                     this.currentIndex = this.aniOrder[i]
                     // 统计转动圈数，对比当前位置的prizeIndex与上次中奖位置的prizeIndex，相同则为一圈
                     if (this.lastIndex == this.currentIndex) {
+                        if (laps >= 3) {
+                            this.stopMove()
+                        }
                         laps++
                     }
                     // 第三圈后半段开始减速，给用户奖品即将揭晓的感觉
