@@ -1,0 +1,33 @@
+{
+  "files": {
+    "main.css": "./static/css/main.86125800.css",
+    "main.js": "./static/js/main.ccd2ebe5.js",
+    "static/media/light.png": "./static/media/light.8a7099f10d33a726e7b5.png",
+    "static/media/load_bg.jpg": "./static/media/load_bg.b911b56b6344cff7f886.jpg",
+    "static/media/road.jpg": "./static/media/road.ca8f03ea0164fb4fd45c.jpg",
+    "static/media/task_bg_color.png": "./static/media/task_bg_color.59a38751ad7ebabc2753.png",
+    "static/media/big_box_bg.png": "./static/media/big_box_bg.0008136482ff8fbc5b6b.png",
+    "static/media/big_box_open.png": "./static/media/big_box_open.f5b671937fa662e3e8a2.png",
+    "static/media/big_box_close.png": "./static/media/big_box_close.e44801dfac44d099d20e.png",
+    "static/media/foot_bg.png": "./static/media/foot_bg.bd289e655f857e71ae79.png",
+    "static/media/0.png": "./static/media/0.423a1752e0f335386345.png",
+    "static/media/5.png": "./static/media/5.cc27595b56feb96a507f.png",
+    "static/media/3.png": "./static/media/3.4389985844ff1455c327.png",
+    "static/media/coupon_bg.png": "./static/media/coupon_bg.ca32e884f81a80b7f88f.png",
+    "static/media/prise_12.png": "./static/media/prise_12.0d2e6f4023e914e24a56.png",
+    "static/media/2.png": "./static/media/2.454148fb89fd6925ba78.png",
+    "static/media/6.png": "./static/media/6.c19d2f68d7fec333c8cc.png",
+    "static/media/4.png": "./static/media/4.0fe5fe03f0ebe941da4e.png",
+    "static/media/1.png": "./static/media/1.1308a9ccde8b73c5f605.png",
+    "static/media/popover02.png": "./static/media/popover02.d327021b103915475661.png",
+    "static/media/prise_14.png": "./static/media/prise_14.da191f56f4c987e23164.png",
+    "static/media/prise_11.png": "./static/media/prise_11.e5236f5f4ba3915409c3.png",
+    "static/media/icon_prizes.png": "./static/media/icon_prizes.85bc1ced22fbb5d5fed3.png",
+    "index.html": "./index.html",
+    "main.86125800.css.map": "./static/css/main.86125800.css.map"
+  },
+  "entrypoints": [
+    "static/css/main.86125800.css",
+    "static/js/main.ccd2ebe5.js"
+  ]
+}
