@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "./static/css/main.86125800.css",
-    "main.js": "./static/js/main.ccd2ebe5.js",
+    "main.js": "./static/js/main.8404072c.js",
     "static/media/light.png": "./static/media/light.8a7099f10d33a726e7b5.png",
     "static/media/load_bg.jpg": "./static/media/load_bg.b911b56b6344cff7f886.jpg",
     "static/media/road.jpg": "./static/media/road.ca8f03ea0164fb4fd45c.jpg",
@@ -28,6 +28,6 @@
   },
   "entrypoints": [
     "static/css/main.86125800.css",
-    "static/js/main.ccd2ebe5.js"
+    "static/js/main.8404072c.js"
   ]
 }
